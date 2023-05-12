@@ -119,6 +119,7 @@ Temporary Items
 /test/version_tmp/
 /tmp/
 /plugins/
+/bin/
 
 # Used by dotenv library to load environment variables.
 # .env
