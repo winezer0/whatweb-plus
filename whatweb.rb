@@ -368,7 +368,21 @@ opts = GetoptLong.new(
 )
 
 begin
+  # 排序参数hash表, -p,-r,-re 参数必须放在最前面,以免被别的参数(如-l)抢先退出.
+  move_to_front = ['-p', '--plugins', '-r', '--risk-level', '--re', '--risk-exact']
+  # 创建一个临时数组循环保存参数
+  temp_opts = []
   opts.each do |opt, arg|
+    if move_to_front.include?(opt)
+      temp_opts.unshift([opt, arg])
+    else
+      temp_opts << [opt, arg]
+    end
+  end
+  # 将参数添加到有序的哈希表 sorted_opts
+  sorted_opts = Hash[temp_opts]
+
+  sorted_opts.each do |opt, arg|
     case opt
     when '-i', '--input-file'
       input_file = arg
@@ -387,7 +401,6 @@ begin
       PluginSupport.load_plugins(plugin_selection)  #加载-p --plugins参数输入的文件夹
       PluginSupport.plugin_dorks(arg)
       exit
-
     when '--color', '--colour'
       $use_colour = 'always' unless arg # no argument
       case arg.downcase
