@@ -4,7 +4,8 @@
 # web site for more information on licensing and terms of use.
 # https://www.morningstarsecurity.com/research/whatweb
 ##  gem bundler==2.2.18
-source 'http://mirrors.aliyun.com/rubygems/'
+# source 'http://mirrors.aliyun.com/rubygems/'
+source 'https://gems.ruby-china.com'
 
 # IP Address Ranges
 gem 'ipaddr','1.2.2'
@@ -24,7 +25,7 @@ end
 
 # Character set detection - optional
 group :rchardet do
-  #gem 'rchardet'
+  gem 'rchardet','1.8.0'
 end
 
 # Development dependencies required for tests
