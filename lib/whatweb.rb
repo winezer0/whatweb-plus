@@ -114,14 +114,27 @@ PLUGIN_DIRS = []
 # __dir__ follows symlinks
 # this will work when whatweb is a symlink in /usr/bin/
 $load_path_plugins = [
- 	Dir.pwd, # 当前命令行环境路径
-	File.dirname(File.expand_path($PROGRAM_NAME)),   # whatweb.exe或whatweb.rb文件路径
-	File.expand_path('../', __dir__),   # 当前rb文件的相对路径的上一级
-	File.join(ENV['USERPROFILE'], 'whatweb'),   # windows下的用户目录
-	File.join(ENV['HOME'], 'whatweb'),   # Linux下的用户目录
-	"/opt/whatweb", # 按照自定义安装方法设置的默认路径
-	"/usr/share/whatweb", # Makefile默认安装的路径，也在Kali中使用
-].uniq
+	Dir.pwd, # 当前命令行环境路径
+ File.dirname(File.expand_path($PROGRAM_NAME)),   # whatweb.exe或whatweb.rb文件路径
+ File.expand_path('../', __dir__)   # 当前rb文件的相对路径的上一级
+]
+
+is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
+
+if is_windows
+ if ENV['USERPROFILE']
+	 $load_path_plugins << File.join(ENV['USERPROFILE'], 'whatweb')   # windows下的用户目录
+ end
+else
+ if ENV['HOME']
+	 $load_path_plugins << File.join(ENV['HOME'], 'whatweb')   # Linux下的用户目录
+ end
+ $load_path_plugins << "/opt/whatweb" # 按照自定义安装方法设置的默认路径
+ $load_path_plugins << "/usr/share/whatweb" # Makefile默认安装的路径，也在Kali中使用
+end
+
+$load_path_plugins.uniq.compact
+
 # puts yellow("load_path_plugins: #{$load_path_plugins.inspect}")
 
 $load_path_plugins.each do |dir|
