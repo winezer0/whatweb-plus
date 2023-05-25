@@ -1,5 +1,7 @@
 # whatweb-plus 
 
+由于插件数量过多或代码错误, 目前whatweb-plus无力继续正常运行,尽情拥抱其他开源指纹识别工具吧.
+
 whatweb-plus 是基于国际通用的 Whatweb 优化改造的国内版Web指纹识别工具。
 
 主体程序:
