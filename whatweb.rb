@@ -32,7 +32,7 @@
 # You should have received a copy of the GNU General Public License
 # along with WhatWeb.  If not, see <http://www.gnu.org/licenses/>.
 
-$LOAD_PATH.unshift(File.join(File.expand_path(__dir__)), '.')
+$LOAD_PATH.unshift(__dir__, '.')
 
 require 'lib/whatweb'
 
