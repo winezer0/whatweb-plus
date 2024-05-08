@@ -117,11 +117,15 @@ $load_path_plugins = [
   Dir.pwd,      # 当前命令行环境路径
   File.dirname(File.expand_path($PROGRAM_NAME)),      # whatweb.exe 或 whatweb.rb文件路径
   File.expand_path('../', __dir__),     # 当前rb文件的相对路径的上一级
-  ENV['WHATWEB_ROOT']     # 添加自定义环境变量指定的路径
 ]
 
-is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
 
+# 添加自定义环境变量指定的路径
+if ENV['WHATWEB_ROOT']
+  $load_path_plugins << ENV['WHATWEB_ROOT']
+end
+
+is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
 # 添加 用户目录下的whatweb文件夹
 if is_windows
   if ENV['USERPROFILE']
