@@ -178,47 +178,30 @@ module WhatWeb
       url_list = url_list.select { |x| !(x =~ %r{^[0-9\.\-*\/]+$}) || x =~ /^[\d\.]+$/ }
       url_list += ip_range unless ip_range.empty?
 
-      # make urls friendlier, test if it's a file, if test for not assume it's http://
-      # http, https, ftp, etc
-      push_to_urllist = []
-
-      # 对域名添加添加http协议头,https协议头
+      # 使url更友好，测试如果它是一个文件，如果测试不假设它是 http:// 和 https://
       url_list = url_list.flat_map do |x|
         if File.exist?(x)
-            x
-        elsif x !~ %r{^[a-z]+:\/\/}
-           # add missing URI prefix
-           ["http://#{x}", "https://#{x}"]
+          x
         else
-           x
-           end
-      end
-	
+          # 替换URL中的%insert%字符串 # use url pattern
+          x = x.gsub('%insert%',opts[:url_pattern]) unless opts[:url_pattern].to_s.eql?('')
+          # 添加 url前缀和url后缀 # add prefix & suffix
+          x = "#{opts[:url_prefix]}#{x}#{opts[:url_suffix]}"
+          # 在没有输入协议的时候 分别添加http和https头部
+          x.match(%r{^[a-z]+:\/\/}) ? x : ["http://#{x}", "https://#{x}"]
+        end
+      end.flatten.compact
+
       # TODO: refactor this
       url_list = url_list.map do |x|
         if File.exist?(x)
           x
         else
-          # use url pattern
-          #x = opts[:url_pattern].gsub('%insert%', x) unless opts[:url_pattern].to_s.eql?('')  #BUG
-          x =  x.gsub( '%insert%' ,opts[:url_pattern] ) unless opts[:url_pattern].to_s.eql?('')
-          # add prefix & suffix
-          x = "#{opts[:url_prefix]}#{x}#{opts[:url_suffix]}"
-
-          # need to move this into a URI parsing function
-          #
-          # check for URI prefix
-          # if x !~ %r{^[a-z]+:\/\/}
-          #   # add missing URI prefix
-          #   x.sub!(/^/, 'http://')
-          # end
-          
           # is it a valid domain?
           begin
             domain = Addressable::URI.parse(x)
             # check validity
             raise 'Unable to parse invalid target. No hostname.' if domain.host.empty?
-
             # convert IDN domain
             x = domain.normalize.to_s if domain.host !~ %r{^[a-zA-Z0-9\.:\/]*$}
           rescue => e
@@ -227,12 +210,10 @@ module WhatWeb
             # TODO: print something more useful
             error("Unable to parse invalid target #{x}: #{e}")
           end
-          # return x
           x
         end
       end
 
-      url_list += push_to_urllist unless push_to_urllist.empty?
       # compact removes nils
       url_list = url_list.flatten.compact #.uniq
       if $ADD_PATH 
@@ -241,7 +222,7 @@ module WhatWeb
               $ADD_PATHS.uniq.each do  |path|  
                   base_uri = URI.join(item, path).to_s #URI.join是动态添加,当suffix是/开头时从域名添加，否则从最后一层目录添加
                   #puts base_uri
-                  url_list <<base_uri if (not url_list.include?(base_uri))
+                  url_list << base_uri if (not url_list.include?(base_uri))
                 end
             end
       end
