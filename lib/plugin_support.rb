@@ -90,7 +90,7 @@ class PluginSupport
 
     # no selection, so it's default # 没有任何选择时加载默认目录 # unless检查list是否为nil
     unless list
-        puts  yellow("load default plugin dirs: #{plugin_dirs.inspect}")
+      puts yellow("[*] Load Default Plugin Dirs: #{plugin_dirs.inspect}")
         plugin_dirs.each do |d|
             Dir.glob("#{d}/**/**/*.rb").each { |x| PluginSupport.load_plugin(x) }  # 当前目录和更深子目录
       end
@@ -99,7 +99,7 @@ class PluginSupport
     # separate list into a and b
     #  a = make list of dir & filenames
     #  b = make list of assumed pluginnames
-    puts  yellow("load custom plugin dirs: #{list.inspect}")
+    puts yellow("Load Custom Plugin Dirs: #{list.inspect}")
     list.split(',').each do |p|
       choice = PluginChoice.new
       choice.fill(p)

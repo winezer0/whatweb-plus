@@ -42,4 +42,5 @@ end
 group :development do
   gem 'pry','0.13.1', :require => false
   gem 'rb-readline','0.5.5', :require => false # needed by pry on some systems
+  gem 'rubocop', require: false
 end
