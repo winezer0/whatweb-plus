@@ -113,43 +113,36 @@ PLUGIN_DIRS = []
 # Check for plugins in folders relative to the whatweb file first
 # __dir__ follows symlinks
 # this will work when whatweb is a symlink in /usr/bin/
+# 初始化插件加载路径数组，包含基础路径
 $load_path_plugins = [
-  Dir.pwd,      # 当前命令行环境路径
-  File.dirname(File.expand_path($PROGRAM_NAME)),      # whatweb.exe 或 whatweb.rb文件路径
-  File.expand_path('../', __dir__),     # 当前rb文件的相对路径的上一级
+  Dir.pwd,                          # 当前工作目录
+  File.dirname(File.realpath($0)),  # Ruby脚本所在目录，使用 File.realpath($0)代替$PROGRAM_NAME
+  File.expand_path('..', __dir__),  # 上级目录
 ]
 
+# 添加环境变量指定的路径
+$load_path_plugins << ENV['WHATWEB_ROOT'] if ENV.key?('WHATWEB_ROOT')
 
-# 添加自定义环境变量指定的路径
-if ENV['WHATWEB_ROOT']
-  $load_path_plugins << ENV['WHATWEB_ROOT']
+# 添加 用户目录下的 whatweb 文件夹
+if (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)  # Windows
+  $load_path_plugins << File.join(ENV['USERPROFILE'], 'whatweb') if ENV.key?('USERPROFILE')
+else # Unix-like系统（包括Linux）
+  $load_path_plugins << File.join(ENV.fetch('HOME', '/root'), 'whatweb')
+  $load_path_plugins << '/opt/whatweb'
+  $load_path_plugins << '/usr/share/whatweb'
 end
 
-is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
-# 添加 用户目录下的whatweb文件夹
-if is_windows
-  if ENV['USERPROFILE']
-    $load_path_plugins << File.join(ENV['USERPROFILE'], 'whatweb')   # windows下的用户目录
-  end
-else
-  if ENV['HOME']
-    $load_path_plugins << File.join(ENV['HOME'], 'whatweb')   # Linux下的用户目录
-  end
-  # 添加 按照自定义安装方法设置的默认路径
-  $load_path_plugins << "/opt/whatweb"
-  # 添加 Makefile默认安装的路径，也在Kali中使用
-  $load_path_plugins << "/usr/share/whatweb"
-end
-
-# 去重和去 nil
-$load_path_plugins.uniq.compact
-# puts yellow("load_path_plugins: #{$load_path_plugins.inspect}")
+# 去除数组nil值
+$load_path_plugins.compact!
+# 去除数组重复值
+$load_path_plugins.uniq!
+# puts yellow("load_path_plugins: #{ $load_path_plugins.inspect}")
 
 # 将所有路径加载到 PLUGIN_DIRS 中
 $load_path_plugins.each do |dir|
-	["plugins", "my-plugins"].each do |subdir|
+	%w[plugins my-plugins].each do |subdir|
     path = File.expand_path(subdir, dir)
 	  PLUGIN_DIRS << path if Dir.exist?(path)
 	end
 end
-# puts  yellow("load_plugin_dirs: #{PLUGIN_DIRS.inspect}")
+# puts yellow("PLUGIN_DIRS: #{PLUGIN_DIRS.inspect}")
