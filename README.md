@@ -23,6 +23,12 @@ https://github.com/urbanadventurer/WhatWeb
 
 
 
+## 免责声明
+继续阅读文章或使用工具视为您已同意NOVASEC免责声明
+
+[NOVASEC免责声明](https://mp.weixin.qq.com/s/iRWRVxkYu7Fx5unxA34I7g)
+
+
 
 # TODO
 
