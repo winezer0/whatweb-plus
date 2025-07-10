@@ -2,6 +2,13 @@
 
 whatweb-plus 是基于国际通用的 Whatweb 优化改造的国内版Web指纹识别工具。
 
+
+## 免责声明
+继续阅读文章或使用工具视为您已同意NOVASEC免责声明
+
+[NOVASEC免责声明](https://mp.weixin.qq.com/s/iRWRVxkYu7Fx5unxA34I7g)
+
+
 **由于插件数量过多或代码错误, 目前无法快速正常运行,尽情拥抱其他开源指纹识别工具吧.**
 
 
@@ -20,13 +27,6 @@ https://github.com/urbanadventurer/WhatWeb
 为限制git文件夹大小,现已对项目文件夹结构进行清理。
 
 后续windows可执行文件下载请访问 [Releases页面](https://github.com/winezer0/whatweb-plus/releases/)
-
-
-
-## 免责声明
-继续阅读文章或使用工具视为您已同意NOVASEC免责声明
-
-[NOVASEC免责声明](https://mp.weixin.qq.com/s/iRWRVxkYu7Fx5unxA34I7g)
 
 
 
